@@ -2,6 +2,7 @@
 Pydantic schemas for authentication endpoints.
 These define request and response models for auth operations.
 """
+from uuid import UUID
 from pydantic import BaseModel, EmailStr, Field
 
 
@@ -67,7 +68,7 @@ class TokenResponse(BaseModel):
 
 class UserResponse(BaseModel):
     """Response model for user data."""
-    id: int = Field(..., description="User ID")
+    id: UUID = Field(..., description="User ID")
     name: str = Field(..., description="User's full name")
     email: str = Field(..., description="User's email address")
 
@@ -76,7 +77,7 @@ class UserResponse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "id": 1,
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
                     "name": "Course Representative",
                     "email": "rep@university.edu"
                 }

@@ -4,6 +4,7 @@ Allows creating, reading, updating, and deactivating payment categories.
 """
 import secrets
 from typing import List
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
@@ -20,7 +21,7 @@ from app.schemas.category import CategoryCreate, CategoryUpdate, CategoryRespons
 router = APIRouter(prefix="/api/categories", tags=["categories"])
 
 
-def get_category_by_id_and_owner(category_id: int, user: User, db: Session) -> Category:
+def get_category_by_id_and_owner(category_id: UUID, user: User, db: Session) -> Category:
     """
     Fetch category and verify ownership.
 
@@ -164,7 +165,7 @@ def list_categories(
 
 @router.get("/{category_id}", response_model=CategoryResponse)
 def get_category(
-    category_id: int,
+    category_id: UUID,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -190,7 +191,7 @@ def get_category(
 
 @router.patch("/{category_id}", response_model=CategoryResponse)
 def update_category(
-    category_id: int,
+    category_id: UUID,
     request: CategoryUpdate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -228,7 +229,7 @@ def update_category(
 
 @router.post("/{category_id}/deactivate", status_code=status.HTTP_200_OK)
 def deactivate_category(
-    category_id: int,
+    category_id: UUID,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -262,7 +263,7 @@ def deactivate_category(
 
 @router.post("/{category_id}/activate", status_code=status.HTTP_200_OK)
 def activate_category(
-    category_id: int,
+    category_id: UUID,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):

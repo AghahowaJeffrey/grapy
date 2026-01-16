@@ -3,7 +3,7 @@ S3/MinIO storage service for file uploads and retrieval.
 Handles receipt file uploads with validation and signed URL generation.
 """
 import os
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import BinaryIO
 
 import boto3
@@ -147,7 +147,7 @@ def validate_file_extension(filename: str) -> str:
     return ext
 
 
-def validate_file_size(file: BinaryIO, max_size: int = None) -> int:
+def validate_file_size(file: BinaryIO, max_size: int) -> int:
     """
     Validate file size doesn't exceed maximum.
 
@@ -192,7 +192,7 @@ def generate_receipt_key(category_id: int, submission_id: int, filename: str) ->
     Returns:
         S3 object key string
     """
-    timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
     # Sanitize filename (replace spaces with underscores)
     safe_filename = filename.replace(" ", "_")
     key = f"receipts/{category_id}/{submission_id}/{timestamp}_{safe_filename}"

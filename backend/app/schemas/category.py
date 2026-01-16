@@ -5,6 +5,7 @@ These define request and response models for category operations.
 from datetime import datetime
 from decimal import Decimal
 from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel, Field
 
@@ -51,8 +52,8 @@ class CategoryUpdate(BaseModel):
 
 class CategoryResponse(BaseModel):
     """Response model for category data."""
-    id: int = Field(..., description="Category ID")
-    admin_id: int = Field(..., description="ID of admin who created this category")
+    id: UUID = Field(..., description="Category ID")
+    admin_id: UUID = Field(..., description="ID of admin who created this category")
     title: str = Field(..., description="Category title")
     description: Optional[str] = Field(None, description="Category description")
     amount_expected: Optional[Decimal] = Field(None, description="Expected payment amount")
@@ -71,8 +72,8 @@ class CategoryResponse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "id": 1,
-                    "admin_id": 1,
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
+                    "admin_id": "550e8400-e29b-41d4-a716-446655440001",
                     "title": "June Course Materials",
                     "description": "Payment for course textbooks",
                     "amount_expected": 50.00,

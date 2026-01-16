@@ -2,8 +2,10 @@
 PaymentSubmission model for tracking student payment proofs.
 Implements immutable audit trail with strict state machine.
 """
+import uuid
 import enum
-from sqlalchemy import Column, Integer, String, Text, Numeric, Enum, DateTime, ForeignKey
+from sqlalchemy import Column, String, Text, Numeric, Enum, DateTime, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
@@ -30,8 +32,8 @@ class PaymentSubmission(Base):
     """
     __tablename__ = "payment_submissions"
 
-    id = Column(Integer, primary_key=True, index=True)
-    category_id = Column(Integer, ForeignKey("categories.id", ondelete="CASCADE"), nullable=False, index=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+    category_id = Column(UUID(as_uuid=True), ForeignKey("categories.id", ondelete="CASCADE"), nullable=False, index=True)
     student_name = Column(String(255), nullable=False)
     student_phone = Column(String(20), nullable=False)
     amount_paid = Column(Numeric(10, 2), nullable=False)
@@ -40,7 +42,7 @@ class PaymentSubmission(Base):
     admin_note = Column(Text, nullable=True)  # Optional note when confirming/rejecting
     submitted_at = Column(DateTime(timezone=True), server_default=func.now())
     reviewed_at = Column(DateTime(timezone=True), nullable=True)  # Timestamp when status changed
-    reviewed_by = Column(Integer, ForeignKey("users.id"), nullable=True)  # Admin who reviewed
+    reviewed_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)  # Admin who reviewed
 
     # Relationships
     category = relationship("Category", back_populates="submissions")

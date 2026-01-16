@@ -5,6 +5,7 @@ These define request and response models for submission operations.
 from datetime import datetime
 from decimal import Decimal
 from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel, Field
 
@@ -13,8 +14,8 @@ from app.models.submission import SubmissionStatus
 
 class SubmissionResponse(BaseModel):
     """Response model for payment submission data."""
-    id: int = Field(..., description="Submission ID")
-    category_id: int = Field(..., description="Category ID")
+    id: UUID = Field(..., description="Submission ID")
+    category_id: UUID = Field(..., description="Category ID")
     student_name: str = Field(..., description="Student's name")
     student_phone: str = Field(..., description="Student's phone number")
     amount_paid: Decimal = Field(..., description="Amount paid")
@@ -24,15 +25,15 @@ class SubmissionResponse(BaseModel):
     admin_note: Optional[str] = Field(None, description="Admin's note (for confirmed/rejected)")
     submitted_at: datetime = Field(..., description="Submission timestamp")
     reviewed_at: Optional[datetime] = Field(None, description="Review timestamp")
-    reviewed_by: Optional[int] = Field(None, description="ID of admin who reviewed")
+    reviewed_by: Optional[UUID] = Field(None, description="ID of admin who reviewed")
 
     model_config = {
         "from_attributes": True,
         "json_schema_extra": {
             "examples": [
                 {
-                    "id": 1,
-                    "category_id": 1,
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
+                    "category_id": "550e8400-e29b-41d4-a716-446655440001",
                     "student_name": "Jane Smith",
                     "student_phone": "+1234567890",
                     "amount_paid": 50.00,
@@ -81,7 +82,7 @@ class RejectSubmissionRequest(BaseModel):
 
 class PublicCategoryResponse(BaseModel):
     """Public response model for category (for submission form)."""
-    id: int = Field(..., description="Category ID")
+    id: UUID = Field(..., description="Category ID")
     title: str = Field(..., description="Category title")
     description: Optional[str] = Field(None, description="Category description")
     amount_expected: Optional[Decimal] = Field(None, description="Expected payment amount")
@@ -91,7 +92,7 @@ class PublicCategoryResponse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "id": 1,
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
                     "title": "June Course Materials",
                     "description": "Payment for course textbooks",
                     "amount_expected": 50.00
@@ -103,7 +104,7 @@ class PublicCategoryResponse(BaseModel):
 
 class PublicSubmissionResponse(BaseModel):
     """Response model for public submission."""
-    id: int = Field(..., description="Submission ID")
+    id: UUID = Field(..., description="Submission ID")
     status: str = Field(..., description="Submission status")
     message: str = Field(..., description="Success message")
 
@@ -111,7 +112,7 @@ class PublicSubmissionResponse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "id": 1,
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
                     "status": "pending",
                     "message": "Payment proof submitted successfully. The course representative will review it soon."
                 }

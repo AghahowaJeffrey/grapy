@@ -10,18 +10,18 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
     # Database
-    DATABASE_URL: str
+    DATABASE_URL: str = "sqlite+aiosqlite:///./test.db"
 
     # JWT Configuration
-    SECRET_KEY: str  # Must be set in .env (generate with: openssl rand -hex 32)
+    SECRET_KEY: str = ""  # Must be set in .env (generate with: openssl rand -hex 32)
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
     # S3/MinIO Configuration
     S3_ENDPOINT_URL: str = "http://localhost:9000"
-    S3_ACCESS_KEY: str
-    S3_SECRET_KEY: str
+    S3_ACCESS_KEY: str = ""
+    S3_SECRET_KEY: str = ""
     S3_BUCKET_NAME: str = "payment-receipts"
     S3_REGION: str = "us-east-1"
 

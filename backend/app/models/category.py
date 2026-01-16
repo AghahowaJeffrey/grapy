@@ -2,7 +2,9 @@
 Category model for payment collections.
 Each category represents a specific payment event (e.g., "June Materials").
 """
-from sqlalchemy import Column, Integer, String, Text, Numeric, Boolean, DateTime, ForeignKey
+import uuid
+from sqlalchemy import Column, String, Text, Numeric, Boolean, DateTime, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
@@ -15,8 +17,8 @@ class Category(Base):
     """
     __tablename__ = "categories"
 
-    id = Column(Integer, primary_key=True, index=True)
-    admin_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+    admin_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
     amount_expected = Column(Numeric(10, 2), nullable=True)  # Optional expected amount

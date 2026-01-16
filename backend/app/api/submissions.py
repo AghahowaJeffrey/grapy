@@ -6,6 +6,7 @@ import csv
 import io
 from datetime import datetime
 from typing import List, Optional
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, status
 from fastapi.responses import StreamingResponse
@@ -23,7 +24,7 @@ from app.services.storage_service import storage_service
 router = APIRouter(prefix="/api", tags=["submissions"])
 
 
-def get_category_by_id_and_owner(category_id: int, user: User, db: Session) -> Category:
+def get_category_by_id_and_owner(category_id: UUID, user: User, db: Session) -> Category:
     """Helper to fetch category and verify ownership."""
     category = db.query(Category).filter(
         Category.id == category_id,
@@ -36,7 +37,7 @@ def get_category_by_id_and_owner(category_id: int, user: User, db: Session) -> C
     return category
 
 
-def get_submission_with_category_check(submission_id: int, user: User, db: Session) -> PaymentSubmission:
+def get_submission_with_category_check(submission_id: UUID, user: User, db: Session) -> PaymentSubmission:
     """Fetch submission and verify user owns the category."""
     submission = db.query(PaymentSubmission).filter(
         PaymentSubmission.id == submission_id
@@ -59,7 +60,7 @@ def get_submission_with_category_check(submission_id: int, user: User, db: Sessi
 
 @router.get("/categories/{category_id}/submissions", response_model=List[SubmissionResponse])
 def list_submissions(
-    category_id: int,
+    category_id: UUID,
     status_filter: Optional[SubmissionStatus] = Query(None, description="Filter by status"),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -119,7 +120,7 @@ def list_submissions(
 
 @router.get("/submissions/{submission_id}", response_model=SubmissionResponse)
 def get_submission(
-    submission_id: int,
+    submission_id: UUID,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -159,7 +160,7 @@ def get_submission(
 
 @router.patch("/submissions/{submission_id}/confirm", response_model=SubmissionResponse)
 def confirm_submission(
-    submission_id: int,
+    submission_id: UUID,
     request: ConfirmSubmissionRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -217,7 +218,7 @@ def confirm_submission(
 
 @router.patch("/submissions/{submission_id}/reject", response_model=SubmissionResponse)
 def reject_submission(
-    submission_id: int,
+    submission_id: UUID,
     request: RejectSubmissionRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -276,7 +277,7 @@ def reject_submission(
 
 @router.get("/categories/{category_id}/export.csv")
 def export_submissions_csv(
-    category_id: int,
+    category_id: UUID,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):

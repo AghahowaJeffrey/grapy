@@ -4,6 +4,7 @@ Uses bcrypt for password hashing and python-jose for JWT.
 """
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
+from sqlalchemy import Column
 
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -14,7 +15,7 @@ from app.config import settings
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
+def verify_password(plain_password: str, hashed_password: Column[str]) -> bool:
     """
     Verify a plain password against a hashed password.
 
@@ -25,6 +26,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     Returns:
         True if password matches, False otherwise
     """
+    hashed_password: str = hashed_password.value  # type: ignore
     return pwd_context.verify(plain_password, hashed_password)
 
 

@@ -1,6 +1,7 @@
 """
-S3/MinIO storage service for file uploads and retrieval.
+S3-compatible storage service for file uploads and retrieval.
 Handles receipt file uploads with validation and signed URL generation.
+Works with Backblaze B2, AWS S3, or any S3-compatible storage.
 """
 import os
 from datetime import datetime, UTC
@@ -16,10 +17,10 @@ from app.core.exceptions import BadRequestError
 
 class StorageService:
     """
-    Service for managing file storage in S3/MinIO.
+    Service for managing file storage in S3-compatible cloud storage.
 
     Provides methods for uploading files and generating pre-signed URLs
-    for secure file access.
+    for secure file access. Compatible with Backblaze B2, AWS S3, and others.
     """
 
     def __init__(self):
@@ -55,7 +56,7 @@ class StorageService:
 
     def upload_file(self, file: BinaryIO, key: str, content_type: str) -> str:
         """
-        Upload file to S3/MinIO.
+        Upload file to S3-compatible storage (Backblaze B2).
 
         Args:
             file: File-like object to upload
@@ -108,7 +109,7 @@ class StorageService:
 
     def delete_file(self, key: str):
         """
-        Delete a file from S3/MinIO.
+        Delete a file from S3-compatible storage (Backblaze B2).
 
         Args:
             key: S3 object key to delete

@@ -18,8 +18,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
-    # S3/MinIO Configuration
-    S3_ENDPOINT_URL: str = "http://localhost:9000"
+    # S3-Compatible Storage Configuration (Backblaze B2)
+    S3_ENDPOINT_URL: str = "https://s3.us-west-004.backblazeb2.com"
     S3_ACCESS_KEY: str = ""
     S3_SECRET_KEY: str = ""
     S3_BUCKET_NAME: str = "payment-receipts"

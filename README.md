@@ -15,33 +15,51 @@ A system for course representatives to collect and verify student payment proofs
 
 - **Backend**: FastAPI + SQLAlchemy + PostgreSQL
 - **Frontend**: React + TypeScript + Vite
-- **Storage**: MinIO (local) / S3 (production)
+- **Storage**: Backblaze B2 (S3-compatible cloud storage)
 - **Auth**: JWT (access + refresh tokens)
 
 ## Prerequisites
 
 - Python 3.12+
 - Node.js 18+
-- Docker & Docker Compose (for PostgreSQL and MinIO)
+- Docker & Docker Compose (for PostgreSQL)
+- Backblaze B2 account for file storage
 
 ## Setup Instructions
 
-### 1. Start Infrastructure
+### 1. Configure Backblaze B2 Storage
+
+1. **Create Backblaze Account**:
+   - Sign up at [https://www.backblaze.com/b2/sign-up.html](https://www.backblaze.com/b2/sign-up.html)
+   - Free tier: 10 GB storage, 1 GB daily download
+
+2. **Create Application Key**:
+   - Go to [https://secure.backblaze.com/app_keys.htm](https://secure.backblaze.com/app_keys.htm)
+   - Click "Add a New Application Key"
+   - Name: `payment-proof-system`
+   - Type of Access: Read and Write
+   - **Save the keyID and applicationKey** (shown only once!)
+
+3. **Create B2 Bucket**:
+   - Go to [https://secure.backblaze.com/b2_buckets.htm](https://secure.backblaze.com/b2_buckets.htm)
+   - Click "Create a Bucket"
+   - Bucket name: Must be globally unique (e.g., `yourname-payment-receipts`)
+   - Files in Bucket: **Private**
+   - Note the bucket region (e.g., `us-west-004`)
+
+### 2. Start PostgreSQL
 
 ```bash
-# Start PostgreSQL and MinIO
+# Start PostgreSQL
 docker-compose up -d
 
-# Verify services are running
+# Verify service is running
 docker-compose ps
-
-# Access MinIO console: http://localhost:9001
-# Login: minio_admin / minio_password
 ```
 
 **Note**: If Docker is not running, start Docker Desktop or the Docker daemon first.
 
-### 2. Backend Setup
+### 3. Backend Setup
 
 ```bash
 cd backend
@@ -49,8 +67,12 @@ cd backend
 # Activate virtual environment
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-# Environment is already configured with .env file
-# SECRET_KEY has been securely generated
+# Update .env file with your Backblaze B2 credentials:
+# S3_ENDPOINT_URL=https://s3.<your-region>.backblazeb2.com
+# S3_ACCESS_KEY=<your-keyID>
+# S3_SECRET_KEY=<your-applicationKey>
+# S3_BUCKET_NAME=<your-bucket-name>
+# S3_REGION=<your-region>
 
 # Run database migrations
 alembic upgrade head
@@ -63,7 +85,7 @@ Backend will be available at: http://localhost:8000
 
 API documentation: http://localhost:8000/docs
 
-### 3. Frontend Setup
+### 4. Frontend Setup
 
 ```bash
 cd frontend

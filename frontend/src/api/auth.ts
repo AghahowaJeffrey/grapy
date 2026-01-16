@@ -2,7 +2,7 @@
  * Authentication API functions
  */
 import apiClient from './client';
-import { LoginRequest, RegisterRequest, TokenResponse } from '../types/auth';
+import type { LoginRequest, RegisterRequest, TokenResponse } from '../types/auth';
 
 export const loginApi = async (credentials: LoginRequest): Promise<TokenResponse> => {
   const { data } = await apiClient.post<TokenResponse>('/api/auth/login', credentials);

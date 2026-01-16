@@ -4,7 +4,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { CategoryCreate } from '../types/category';
+import type { CategoryCreate } from '../types/category';
 import '../styles/components.css';
 
 const categorySchema = z.object({

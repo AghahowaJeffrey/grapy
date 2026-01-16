@@ -2,7 +2,7 @@
  * Category API functions
  */
 import apiClient from './client';
-import { Category, CategoryCreate, CategoryUpdate } from '../types/category';
+import type { Category, CategoryCreate, CategoryUpdate } from '../types/category';
 
 export const fetchCategoriesApi = async (): Promise<Category[]> => {
   const { data } = await apiClient.get<Category[]>('/api/categories');

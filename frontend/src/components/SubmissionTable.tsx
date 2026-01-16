@@ -2,7 +2,7 @@
  * Submission Table Component
  * Displays list of payment submissions with actions
  */
-import { PaymentSubmission } from '../types/submission';
+import type { PaymentSubmission } from '../types/submission';
 import '../styles/category-detail.css';
 
 interface SubmissionTableProps {

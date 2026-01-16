@@ -4,7 +4,7 @@
  */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { loginApi, registerApi } from '../api/auth';
-import { User, AuthState, LoginRequest, RegisterRequest } from '../types/auth';
+import type { User, AuthState, LoginRequest, RegisterRequest } from '../types/auth';
 
 interface AuthContextType extends AuthState {
   login: (credentials: LoginRequest) => Promise<void>;

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import { fetchCategoriesApi, createCategoryApi, deactivateCategoryApi, activateCategoryApi } from '../../api/categories';
-import { Category } from '../../types/category';
+import type { Category } from '../../types/category';
 import CategoryCard from '../../components/CategoryCard';
 import CreateCategoryModal from '../../components/CreateCategoryModal';
 import '../../styles/dashboard.css';

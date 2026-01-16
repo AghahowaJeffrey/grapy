@@ -1,7 +1,7 @@
 /**
  * Category Card Component
  */
-import { Category } from '../types/category';
+import type { Category } from '../types/category';
 import '../styles/components.css';
 
 interface CategoryCardProps {

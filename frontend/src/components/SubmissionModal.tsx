@@ -3,7 +3,7 @@
  * Displays submission details with confirm/reject actions
  */
 import { useState } from 'react';
-import { PaymentSubmission } from '../types/submission';
+import type { PaymentSubmission } from '../types/submission';
 import ConfirmDialog from './ConfirmDialog';
 import '../styles/components.css';
 import '../styles/category-detail.css';

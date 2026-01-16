@@ -2,7 +2,7 @@
  * Submission API functions
  */
 import apiClient from './client';
-import {
+import type {
   PaymentSubmission,
   ConfirmSubmissionRequest,
   RejectSubmissionRequest,

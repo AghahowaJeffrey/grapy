@@ -1,8 +1,8 @@
 /**
  * Axios client with JWT token handling and automatic refresh
  */
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
-
+import axios, { AxiosError } from 'axios';
+import type { InternalAxiosRequestConfig } from 'axios'
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 // Create axios instance

@@ -12,7 +12,7 @@ import {
   rejectSubmissionApi,
   exportSubmissionsApi,
 } from '../../api/submissions';
-import { SubmissionStatus, PaymentSubmission } from '../../types/submission';
+import type { SubmissionStatus, PaymentSubmission } from '../../types/submission';
 import SubmissionTable from '../../components/SubmissionTable';
 import SubmissionModal from '../../components/SubmissionModal';
 import '../../styles/category-detail.css';

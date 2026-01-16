@@ -74,6 +74,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 # S3_BUCKET_NAME=<your-bucket-name>
 # S3_REGION=<your-region>
 
+
 # Run database migrations
 alembic upgrade head
 

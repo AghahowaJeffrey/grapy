@@ -2,8 +2,8 @@
  * Public API functions (no authentication required)
  */
 import axios from 'axios';
-import { PublicCategory } from '../types/category';
-import { PublicSubmissionResponse } from '../types/submission';
+import type { PublicCategory } from '../types/category';
+import type { PublicSubmissionResponse } from '../types/submission';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 

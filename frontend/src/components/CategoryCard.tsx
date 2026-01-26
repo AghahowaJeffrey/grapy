@@ -49,7 +49,13 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
       {category.amount_expected && (
         <div className="category-amount">
           <span>Expected Amount:</span>
-          <strong>${category.amount_expected.toFixed(2)}</strong>
+          {
+            typeof category.amount_expected === "number" ? (
+              <strong>${category.amount_expected.toFixed(2)}</strong>
+            ) : (
+              <strong>{category.amount_expected}</strong>
+            )
+          }
         </div>
       )}
 

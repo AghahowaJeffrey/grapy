@@ -5,8 +5,9 @@ Admin-only authentication system (students don't need accounts).
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
+from app.api.deps import get_current_user
 from app.core.security import verify_password, get_password_hash, create_access_token, create_refresh_token, decode_token
-from app.core.exceptions import AuthenticationError, ConflictError, BadRequestError
+from app.core.exceptions import AuthenticationError, ConflictError
 from app.database import get_db
 from app.models.user import User
 from app.schemas.auth import RegisterRequest, LoginRequest, RefreshTokenRequest, TokenResponse, UserResponse
@@ -48,8 +49,8 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
     db.refresh(user)
 
     # Generate JWT tokens
-    access_token = create_access_token(data={"sub": user.id})
-    refresh_token = create_refresh_token(data={"sub": user.id})
+    access_token = create_access_token(data={"sub": str(user.id)})
+    refresh_token = create_refresh_token(data={"sub": str(user.id)})
 
     return TokenResponse(
         access_token=access_token,
@@ -83,8 +84,8 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
         raise AuthenticationError(detail="Incorrect email or password")
 
     # Generate JWT tokens
-    access_token = create_access_token(data={"sub": user.id})
-    refresh_token = create_refresh_token(data={"sub": user.id})
+    access_token = create_access_token(data={"sub": str(user.id)})
+    refresh_token = create_refresh_token(data={"sub": str(user.id)})
 
     return TokenResponse(
         access_token=access_token,
@@ -119,8 +120,8 @@ def refresh_access_token(request: RefreshTokenRequest, db: Session = Depends(get
         if token_type != "refresh":
             raise AuthenticationError(detail="Invalid token type")
 
-        # Extract user ID
-        user_id: int = payload.get("sub")
+        # Extract user ID (UUID as string)
+        user_id: str = payload.get("sub")
         if user_id is None:
             raise AuthenticationError(detail="Invalid token payload")
 
@@ -133,7 +134,7 @@ def refresh_access_token(request: RefreshTokenRequest, db: Session = Depends(get
         raise AuthenticationError(detail="User not found")
 
     # Issue new access token
-    new_access_token = create_access_token(data={"sub": user.id})
+    new_access_token = create_access_token(data={"sub": str(user.id)})
 
     return TokenResponse(
         access_token=new_access_token,
@@ -143,21 +144,21 @@ def refresh_access_token(request: RefreshTokenRequest, db: Session = Depends(get
 
 
 @router.get("/me", response_model=UserResponse)
-def get_current_user_info(db: Session = Depends(get_db)):
+def get_current_user_info(current_user: User = Depends(get_current_user)):
     """
     Get current authenticated user's information.
 
     This endpoint requires a valid access token in the Authorization header.
+    The user is automatically extracted from the JWT token.
 
     Args:
-        db: Database session
+        current_user: Current authenticated user (injected by dependency)
 
     Returns:
-        UserResponse with user details
-
-    Note:
-        Currently returns minimal user info. Expand as needed.
+        UserResponse with user details (id, name, email)
     """
-    # TODO: Implement get_current_user dependency once we have it
-    # For now, this is a placeholder
-    raise BadRequestError(detail="Not yet implemented")
+    return UserResponse(
+        id=current_user.id,
+        name=current_user.name,
+        email=current_user.email
+    )

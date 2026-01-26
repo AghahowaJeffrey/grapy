@@ -11,7 +11,9 @@ import '../../styles/auth.css';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(72, 'Password cannot exceed 72 characters'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -79,6 +81,7 @@ const Login = () => {
               id="password"
               type="password"
               placeholder="Enter your password"
+              maxLength={72}
               {...register('password')}
               className={errors.password ? 'input-error' : ''}
               disabled={isLoading}

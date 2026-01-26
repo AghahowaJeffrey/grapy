@@ -10,7 +10,7 @@ class RegisterRequest(BaseModel):
     """Request model for user registration."""
     name: str = Field(..., min_length=2, max_length=255, description="User's full name")
     email: EmailStr = Field(..., description="User's email address")
-    password: str = Field(..., min_length=8, max_length=100, description="User's password")
+    password: str = Field(..., min_length=8, max_length=72, description="User's password (max 72 chars due to bcrypt)")
 
     model_config = {
         "json_schema_extra": {

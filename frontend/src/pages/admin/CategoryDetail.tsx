@@ -45,7 +45,7 @@ const CategoryDetail = () => {
 
   // Confirm mutation
   const confirmMutation = useMutation({
-    mutationFn: ({ id, note }: { id: number; note?: string }) =>
+    mutationFn: ({ id, note }: { id: string; note?: string }) =>
       confirmSubmissionApi(id, note ? { admin_note: note } : undefined),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['submissions', id] });
@@ -60,7 +60,7 @@ const CategoryDetail = () => {
 
   // Reject mutation
   const rejectMutation = useMutation({
-    mutationFn: ({ id, note }: { id: number; note: string }) =>
+    mutationFn: ({ id, note }: { id: string; note: string }) =>
       rejectSubmissionApi(id, { admin_note: note }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['submissions', id] });
@@ -138,7 +138,9 @@ const CategoryDetail = () => {
           <h1>{category.title}</h1>
           <p className="description">{category.description || 'No description'}</p>
           {category.amount_expected && (
-            <p className="amount">Expected Amount: ${category.amount_expected.toFixed(2)}</p>
+            <p className="amount">Expected Amount: ${
+              typeof category.amount_expected === "number" ? category.amount_expected.toFixed(2) : category.amount_expected
+            }</p>
           )}
         </div>
         <div className="header-actions">

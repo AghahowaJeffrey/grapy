@@ -46,8 +46,8 @@ def get_current_user(
         if token_type != "access":
             raise AuthenticationError(detail="Invalid token type")
 
-        # Extract user ID from token
-        user_id: int = payload.get("sub")
+        # Extract user ID from token (UUID as string)
+        user_id: str = payload.get("sub")
         if user_id is None:
             raise AuthenticationError(detail="Invalid token payload")
 

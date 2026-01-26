@@ -26,7 +26,6 @@ const SubmissionModal = ({
   isRejecting,
 }: SubmissionModalProps) => {
   const [adminNote, setAdminNote] = useState('');
-  const [action, setAction] = useState<'confirm' | 'reject' | null>(null);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
 
   const formatDate = (dateString: string) => {
@@ -155,17 +154,13 @@ const SubmissionModal = ({
               <h3>Admin Actions</h3>
               <div className="form-group">
                 <label htmlFor="adminNote">
-                  Admin Note {action === 'reject' && <span className="required">*</span>}
+                  Admin Note
                 </label>
                 <textarea
                   id="adminNote"
                   value={adminNote}
                   onChange={(e) => setAdminNote(e.target.value)}
-                  placeholder={
-                    action === 'reject'
-                      ? 'Please provide a reason for rejection...'
-                      : 'Optional note about this submission...'
-                  }
+                  placeholder="Optional note about this submission..."
                   rows={3}
                   disabled={isProcessing}
                 />

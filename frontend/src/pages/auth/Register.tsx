@@ -12,7 +12,9 @@ import '../../styles/auth.css';
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(72, 'Password cannot exceed 72 characters'),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
@@ -103,6 +105,7 @@ const Register = () => {
               id="password"
               type="password"
               placeholder="At least 8 characters"
+              maxLength={72}
               {...register('password')}
               className={errors.password ? 'input-error' : ''}
               disabled={isLoading}
@@ -116,6 +119,7 @@ const Register = () => {
               id="confirmPassword"
               type="password"
               placeholder="Re-enter your password"
+              maxLength={72}
               {...register('confirmPassword')}
               className={errors.confirmPassword ? 'input-error' : ''}
               disabled={isLoading}

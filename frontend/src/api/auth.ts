@@ -2,7 +2,7 @@
  * Authentication API functions
  */
 import apiClient from './client';
-import type { LoginRequest, RegisterRequest, TokenResponse } from '../types/auth';
+import type { LoginRequest, RegisterRequest, TokenResponse, User } from '../types/auth';
 
 export const loginApi = async (credentials: LoginRequest): Promise<TokenResponse> => {
   const { data } = await apiClient.post<TokenResponse>('/api/auth/login', credentials);
@@ -18,5 +18,10 @@ export const refreshTokenApi = async (refreshToken: string): Promise<TokenRespon
   const { data } = await apiClient.post<TokenResponse>('/api/auth/refresh', {
     refresh_token: refreshToken,
   });
+  return data;
+};
+
+export const getCurrentUserApi = async (): Promise<User> => {
+  const { data } = await apiClient.get<User>('/api/auth/me');
   return data;
 };

@@ -18,6 +18,7 @@ from app.services.storage_service import (
     validate_file_size,
     generate_receipt_key
 )
+from app.config import settings
 
 router = APIRouter(prefix="/api/public", tags=["public"])
 
@@ -107,7 +108,7 @@ async def submit_payment(
     validate_file_extension(receipt.filename)
 
     # Validate file size
-    validate_file_size(receipt.file)
+    validate_file_size(receipt.file, max_size=settings.MAX_UPLOAD_SIZE)
 
     # Create submission record first (to get ID for S3 key)
     submission = PaymentSubmission(

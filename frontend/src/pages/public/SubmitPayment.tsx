@@ -3,7 +3,7 @@
  * Students can submit payment proofs without authentication
  */
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,7 +21,7 @@ const submissionSchema = z.object({
     .min(10, 'Phone number must be at least 10 digits')
     .regex(/^[+\d\s()-]+$/, 'Invalid phone number format'),
   amount_paid: z
-    .number({ invalid_type_error: 'Amount must be a number' })
+    .number({ message: 'Amount must be a number' })
     .positive('Amount must be greater than 0')
     .multipleOf(0.01, 'Amount must have at most 2 decimal places'),
   receipt: z
@@ -41,10 +41,9 @@ type SubmissionFormData = z.infer<typeof submissionSchema>;
 
 const SubmitPayment = () => {
   const { token } = useParams<{ token: string }>();
-  const navigate = useNavigate();
   const [receiptPreview, setReceiptPreview] = useState<string | null>(null);
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
-  const [submissionId, setSubmissionId] = useState<number | null>(null);
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
 
   // Fetch category details
   const {
@@ -164,7 +163,13 @@ const SubmitPayment = () => {
           {category.amount_expected && (
             <div className="expected-amount">
               <span>Expected Amount:</span>
-              <strong>${category.amount_expected.toFixed(2)}</strong>
+              <strong>$
+              {
+              typeof category.amount_expected === "number" 
+              ? category.amount_expected.toFixed(2) 
+              : category.amount_expected
+              }
+              </strong>
             </div>
           )}
         </div>

@@ -26,13 +26,20 @@ def verify_password(plain_password: str, hashed_password: Column[str]) -> bool:
     Returns:
         True if password matches, False otherwise
     """
-    hashed_password: str = hashed_password.value  # type: ignore
-    return pwd_context.verify(plain_password, hashed_password)
+    # Truncate to 72 bytes (bcrypt limit) for consistency with hashing
+    password_bytes = plain_password.encode('utf-8')[:72]
+    password_truncated = password_bytes.decode('utf-8', errors='ignore')
+
+    hashed_password: str = hashed_password  # type: ignore
+    return pwd_context.verify(password_truncated, hashed_password)
 
 
 def get_password_hash(password: str) -> str:
     """
     Hash a plain password using bcrypt.
+
+    Bcrypt has a 72-byte password limit. Passwords are truncated to 72 bytes
+    as a defensive measure (validation should prevent this).
 
     Args:
         password: The plain text password to hash
@@ -40,7 +47,11 @@ def get_password_hash(password: str) -> str:
     Returns:
         Bcrypt hashed password string
     """
-    return pwd_context.hash(password)
+    # Truncate to 72 bytes (bcrypt limit) as defensive measure
+    # Validation should prevent this, but we handle it gracefully
+    password_bytes = password.encode('utf-8')[:72]
+    password_truncated = password_bytes.decode('utf-8', errors='ignore')
+    return pwd_context.hash(password_truncated)
 
 
 def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:

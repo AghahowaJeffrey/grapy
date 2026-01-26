@@ -2,7 +2,7 @@
 Public endpoints for student payment submissions.
 These endpoints don't require authentication - students access via public token.
 """
-from datetime import datetime
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, File, Form, UploadFile, status
 from sqlalchemy.orm import Session
@@ -50,7 +50,7 @@ def get_public_category(token: str, db: Session = Depends(get_db)):
         raise NotFoundError(detail="Category not found or no longer active")
 
     # Check if category has expired
-    if category.expires_at and category.expires_at < datetime.utcnow():
+    if category.expires_at and category.expires_at < datetime.now(timezone.utc):
         raise NotFoundError(detail="This category has expired and is no longer accepting submissions")
 
     return PublicCategoryResponse(
@@ -101,7 +101,7 @@ async def submit_payment(
         raise NotFoundError(detail="Category not found or no longer active")
 
     # Check expiration
-    if category.expires_at and category.expires_at < datetime.utcnow():
+    if category.expires_at and category.expires_at < datetime.now(timezone.utc):
         raise BadRequestError(detail="This category has expired and is no longer accepting submissions")
 
     # Validate file extension

@@ -2,11 +2,11 @@
  * Submission Modal Component
  * Displays submission details with confirm/reject actions
  */
-import { useState } from 'react';
-import type { PaymentSubmission } from '../types/submission';
-import ConfirmDialog from './ConfirmDialog';
-import '../styles/components.css';
-import '../styles/category-detail.css';
+import { useState } from "react";
+import type { PaymentSubmission } from "../types/submission";
+import ConfirmDialog from "./ConfirmDialog";
+import "../styles/components.css";
+import "../styles/category-detail.css";
 
 interface SubmissionModalProps {
   submission: PaymentSubmission;
@@ -23,19 +23,19 @@ const SubmissionModal = ({
   onConfirm,
   onReject,
   isConfirming,
-  isRejecting,
+  isRejecting
 }: SubmissionModalProps) => {
-  const [adminNote, setAdminNote] = useState('');
+  const [adminNote, setAdminNote] = useState("");
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
     });
   };
 
@@ -45,7 +45,7 @@ const SubmissionModal = ({
 
   const handleRejectClick = () => {
     if (!adminNote.trim()) {
-      alert('Please provide a rejection reason in the admin note.');
+      alert("Please provide a rejection reason in the admin note.");
       return;
     }
     setShowRejectConfirm(true);
@@ -57,11 +57,14 @@ const SubmissionModal = ({
   };
 
   const isProcessing = isConfirming || isRejecting;
-  const isPending = submission.status === 'pending';
+  const isPending = submission.status === "pending";
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content submission-modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-content submission-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="modal-header">
           <h2>Submission Details</h2>
           <button
@@ -89,7 +92,9 @@ const SubmissionModal = ({
               </div>
               <div className="info-item">
                 <span className="info-label">Amount Paid:</span>
-                <span className="info-value">${submission.amount_paid.toFixed(2)}</span>
+                <span className="info-value">
+                  ${Number(submission.amount_paid).toFixed(2)}
+                </span>
               </div>
               <div className="info-item">
                 <span className="info-label">Status:</span>
@@ -99,12 +104,16 @@ const SubmissionModal = ({
               </div>
               <div className="info-item">
                 <span className="info-label">Submitted At:</span>
-                <span className="info-value">{formatDate(submission.submitted_at)}</span>
+                <span className="info-value">
+                  {formatDate(submission.submitted_at)}
+                </span>
               </div>
               {submission.reviewed_at && (
                 <div className="info-item">
                   <span className="info-label">Reviewed At:</span>
-                  <span className="info-value">{formatDate(submission.reviewed_at)}</span>
+                  <span className="info-value">
+                    {formatDate(submission.reviewed_at)}
+                  </span>
                 </div>
               )}
             </div>
@@ -115,7 +124,7 @@ const SubmissionModal = ({
             <h3>Payment Receipt</h3>
             <div className="receipt-preview">
               {submission.receipt_signed_url ? (
-                submission.receipt_url.toLowerCase().endsWith('.pdf') ? (
+                submission.receipt_url.toLowerCase().endsWith(".pdf") ? (
                   <div className="pdf-preview">
                     <p>PDF Receipt</p>
                     <a
@@ -153,9 +162,7 @@ const SubmissionModal = ({
             <div className="submission-section">
               <h3>Admin Actions</h3>
               <div className="form-group">
-                <label htmlFor="adminNote">
-                  Admin Note
-                </label>
+                <label htmlFor="adminNote">Admin Note</label>
                 <textarea
                   id="adminNote"
                   value={adminNote}
@@ -183,7 +190,7 @@ const SubmissionModal = ({
                       Confirming...
                     </>
                   ) : (
-                    '✓ Confirm'
+                    "✓ Confirm"
                   )}
                 </button>
                 <button
@@ -197,7 +204,7 @@ const SubmissionModal = ({
                       Rejecting...
                     </>
                   ) : (
-                    '✕ Reject'
+                    "✕ Reject"
                   )}
                 </button>
               </>

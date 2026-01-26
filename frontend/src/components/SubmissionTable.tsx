@@ -2,36 +2,39 @@
  * Submission Table Component
  * Displays list of payment submissions with actions
  */
-import type { PaymentSubmission } from '../types/submission';
-import '../styles/category-detail.css';
+import type { PaymentSubmission } from "../types/submission";
+import "../styles/category-detail.css";
 
 interface SubmissionTableProps {
   submissions: PaymentSubmission[];
   onViewSubmission: (submission: PaymentSubmission) => void;
 }
 
-const SubmissionTable = ({ submissions, onViewSubmission }: SubmissionTableProps) => {
+const SubmissionTable = ({
+  submissions,
+  onViewSubmission
+}: SubmissionTableProps) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
     });
   };
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
-      case 'pending':
-        return 'status-badge status-pending';
-      case 'confirmed':
-        return 'status-badge status-confirmed';
-      case 'rejected':
-        return 'status-badge status-rejected';
+      case "pending":
+        return "status-badge status-pending";
+      case "confirmed":
+        return "status-badge status-confirmed";
+      case "rejected":
+        return "status-badge status-rejected";
       default:
-        return 'status-badge';
+        return "status-badge";
     }
   };
 
@@ -53,7 +56,7 @@ const SubmissionTable = ({ submissions, onViewSubmission }: SubmissionTableProps
             <tr key={submission.id}>
               <td>{submission.student_name}</td>
               <td>{submission.student_phone}</td>
-              <td>${submission.amount_paid.toFixed(2)}</td>
+              <td>${Number(submission.amount_paid).toFixed(2)}</td>
               <td>
                 <span className={getStatusBadgeClass(submission.status)}>
                   {submission.status.toUpperCase()}

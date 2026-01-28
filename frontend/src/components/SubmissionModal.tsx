@@ -5,8 +5,6 @@
 import { useState } from "react";
 import type { PaymentSubmission } from "../types/submission";
 import ConfirmDialog from "./ConfirmDialog";
-import "../styles/components.css";
-import "../styles/category-detail.css";
 
 interface SubmissionModalProps {
   submission: PaymentSubmission;
@@ -60,156 +58,252 @@ const SubmissionModal = ({
   const isPending = submission.status === "pending";
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div
+      className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn"
+      onClick={onClose}
+    >
       <div
-        className="modal-content submission-modal"
+        className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-slideIn"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="modal-header">
-          <h2>Submission Details</h2>
+        {/* Header */}
+        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-gray-900">
+            Submission Details
+          </h2>
           <button
             onClick={onClose}
-            className="modal-close"
+            className="p-1 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
             disabled={isProcessing}
             aria-label="Close modal"
           >
-            ×
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
           </button>
         </div>
 
-        <div className="modal-form">
+        <div className="p-6 space-y-6">
           {/* Student Information */}
-          <div className="submission-section">
-            <h3>Student Information</h3>
-            <div className="info-grid">
-              <div className="info-item">
-                <span className="info-label">Name:</span>
-                <span className="info-value">{submission.student_name}</span>
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Student Information
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Name</p>
+                <p className="text-base font-semibold text-gray-900">
+                  {submission.student_name}
+                </p>
               </div>
-              <div className="info-item">
-                <span className="info-label">Phone:</span>
-                <span className="info-value">{submission.student_phone}</span>
+              <div>
+                <p className="text-sm font-medium text-gray-600">Phone</p>
+                <p className="text-base font-semibold text-gray-900">
+                  {submission.student_phone}
+                </p>
               </div>
-              <div className="info-item">
-                <span className="info-label">Amount Paid:</span>
-                <span className="info-value">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Amount Paid</p>
+                <p className="text-lg font-bold text-blue-600">
                   ${Number(submission.amount_paid).toFixed(2)}
-                </span>
+                </p>
               </div>
-              <div className="info-item">
-                <span className="info-label">Status:</span>
-                <span className={`status-badge status-${submission.status}`}>
-                  {submission.status.toUpperCase()}
-                </span>
+              <div>
+                <p className="text-sm font-medium text-gray-600">Status</p>
+                <div className="mt-1">
+                  <span
+                    className={`badge ${
+                      submission.status === "pending"
+                        ? "badge-yellow"
+                        : submission.status === "confirmed"
+                          ? "badge-green"
+                          : "badge-red"
+                    }`}
+                  >
+                    {submission.status.charAt(0).toUpperCase() +
+                      submission.status.slice(1)}
+                  </span>
+                </div>
               </div>
-              <div className="info-item">
-                <span className="info-label">Submitted At:</span>
-                <span className="info-value">
+              <div className="col-span-2">
+                <p className="text-sm font-medium text-gray-600">
+                  Submitted At
+                </p>
+                <p className="text-base text-gray-900">
                   {formatDate(submission.submitted_at)}
-                </span>
+                </p>
               </div>
               {submission.reviewed_at && (
-                <div className="info-item">
-                  <span className="info-label">Reviewed At:</span>
-                  <span className="info-value">
+                <div className="col-span-2">
+                  <p className="text-sm font-medium text-gray-600">
+                    Reviewed At
+                  </p>
+                  <p className="text-base text-gray-900">
                     {formatDate(submission.reviewed_at)}
-                  </span>
+                  </p>
                 </div>
               )}
             </div>
           </div>
 
           {/* Receipt */}
-          <div className="submission-section">
-            <h3>Payment Receipt</h3>
-            <div className="receipt-preview">
-              {submission.receipt_signed_url ? (
-                submission.receipt_url.toLowerCase().endsWith(".pdf") ? (
-                  <div className="pdf-preview">
-                    <p>PDF Receipt</p>
-                    <a
-                      href={submission.receipt_signed_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-view-receipt"
-                    >
-                      Open PDF in New Tab
-                    </a>
-                  </div>
-                ) : (
-                  <img
-                    src={submission.receipt_signed_url}
-                    alt="Payment receipt"
-                    className="receipt-image"
-                  />
-                )
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Payment Receipt
+            </h3>
+            {submission.receipt_signed_url ? (
+              submission.receipt_url.toLowerCase().endsWith(".pdf") ? (
+                <div className="flex flex-col items-center justify-center p-6 bg-gray-50 rounded-lg border border-gray-200">
+                  <svg
+                    className="w-12 h-12 text-red-500 mb-2"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-. 9-2zm0-7c-1.1 0-1.99.9-1.99 2S5.9 15 7 15s2-.9 2-2-.9-2-2-2z" />
+                  </svg>
+                  <p className="text-gray-700 font-medium mb-3">PDF Receipt</p>
+                  <a
+                    href={submission.receipt_signed_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                  >
+                    Open PDF
+                  </a>
+                </div>
               ) : (
-                <p className="no-receipt">No receipt available</p>
-              )}
-            </div>
+                <img
+                  src={submission.receipt_signed_url}
+                  alt="Payment receipt"
+                  className="w-full rounded-lg border border-gray-200 shadow-sm"
+                />
+              )
+            ) : (
+              <div className="p-6 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                <p className="text-gray-500">No receipt available</p>
+              </div>
+            )}
           </div>
 
-          {/* Admin Note */}
+          {/* Admin Note Display */}
           {submission.admin_note && (
-            <div className="submission-section">
-              <h3>Admin Note</h3>
-              <p className="admin-note-display">{submission.admin_note}</p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Admin Note
+              </h3>
+              <p className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-gray-800 text-sm">
+                {submission.admin_note}
+              </p>
             </div>
           )}
 
           {/* Admin Actions (only for pending submissions) */}
           {isPending && (
-            <div className="submission-section">
-              <h3>Admin Actions</h3>
-              <div className="form-group">
-                <label htmlFor="adminNote">Admin Note</label>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Admin Actions
+              </h3>
+              <div>
+                <label
+                  htmlFor="adminNote"
+                  className="block text-sm font-medium text-gray-900 mb-2"
+                >
+                  Admin Note (Optional)
+                </label>
                 <textarea
                   id="adminNote"
                   value={adminNote}
                   onChange={(e) => setAdminNote(e.target.value)}
-                  placeholder="Optional note about this submission..."
+                  placeholder="Add a note about this submission..."
                   rows={3}
                   disabled={isProcessing}
+                  className="input resize-none"
                 />
               </div>
             </div>
           )}
 
           {/* Action Buttons */}
-          <div className="modal-actions">
+          <div className="flex gap-3 pt-4 border-t border-gray-200">
             {isPending ? (
               <>
                 <button
                   onClick={handleConfirm}
-                  className="btn-confirm"
+                  className="btn-primary flex-1"
                   disabled={isProcessing}
                 >
                   {isConfirming ? (
-                    <>
-                      <span className="spinner"></span>
+                    <span className="flex items-center justify-center gap-2">
+                      <svg
+                        className="animate-spin h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
                       Confirming...
-                    </>
+                    </span>
                   ) : (
-                    "✓ Confirm"
+                    "✓ Confirm Payment"
                   )}
                 </button>
                 <button
                   onClick={handleRejectClick}
-                  className="btn-reject"
+                  className="btn-danger flex-1"
                   disabled={isProcessing}
                 >
                   {isRejecting ? (
-                    <>
-                      <span className="spinner"></span>
+                    <span className="flex items-center justify-center gap-2">
+                      <svg
+                        className="animate-spin h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
                       Rejecting...
-                    </>
+                    </span>
                   ) : (
                     "✕ Reject"
                   )}
                 </button>
               </>
             ) : (
-              <button onClick={onClose} className="btn-close-modal">
+              <button onClick={onClose} className="btn-secondary w-full">
                 Close
               </button>
             )}

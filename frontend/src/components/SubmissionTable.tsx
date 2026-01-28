@@ -3,7 +3,6 @@
  * Displays list of payment submissions with actions
  */
 import type { PaymentSubmission } from "../types/submission";
-import "../styles/category-detail.css";
 
 interface SubmissionTableProps {
   submissions: PaymentSubmission[];
@@ -25,48 +24,72 @@ const SubmissionTable = ({
     });
   };
 
-  const getStatusBadgeClass = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case "pending":
-        return "status-badge status-pending";
+        return "badge-yellow";
       case "confirmed":
-        return "status-badge status-confirmed";
+        return "badge-green";
       case "rejected":
-        return "status-badge status-rejected";
+        return "badge-red";
       default:
-        return "status-badge";
+        return "badge-blue";
     }
   };
 
   return (
-    <div className="submission-table-wrapper">
-      <table className="submission-table">
+    <div className="w-full overflow-x-auto">
+      <table className="w-full">
         <thead>
-          <tr>
-            <th>Student Name</th>
-            <th>Phone</th>
-            <th>Amount</th>
-            <th>Status</th>
-            <th>Submitted</th>
-            <th>Actions</th>
+          <tr className="border-b border-gray-200 bg-gray-50">
+            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              Student Name
+            </th>
+            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              Phone
+            </th>
+            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              Amount
+            </th>
+            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              Status
+            </th>
+            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              Submitted
+            </th>
+            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              Actions
+            </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-gray-100">
           {submissions.map((submission) => (
-            <tr key={submission.id}>
-              <td>{submission.student_name}</td>
-              <td>{submission.student_phone}</td>
-              <td>${Number(submission.amount_paid).toFixed(2)}</td>
-              <td>
-                <span className={getStatusBadgeClass(submission.status)}>
-                  {submission.status.toUpperCase()}
+            <tr
+              key={submission.id}
+              className="hover:bg-blue-50 transition-colors"
+            >
+              <td className="px-6 py-4 text-sm text-gray-900 font-medium">
+                {submission.student_name}
+              </td>
+              <td className="px-6 py-4 text-sm text-gray-600">
+                {submission.student_phone}
+              </td>
+              <td className="px-6 py-4 text-sm font-semibold text-gray-900">
+                ${Number(submission.amount_paid).toFixed(2)}
+              </td>
+              <td className="px-6 py-4">
+                <span className={`badge ${getStatusBadge(submission.status)}`}>
+                  {submission.status.charAt(0).toUpperCase() +
+                    submission.status.slice(1)}
                 </span>
               </td>
-              <td>{formatDate(submission.submitted_at)}</td>
-              <td>
+              <td className="px-6 py-4 text-sm text-gray-600">
+                {formatDate(submission.submitted_at)}
+              </td>
+              <td className="px-6 py-4">
                 <button
                   onClick={() => onViewSubmission(submission)}
-                  className="btn-view-submission"
+                  className="px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                 >
                   View Details
                 </button>
